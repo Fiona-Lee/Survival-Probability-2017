@@ -1,0 +1,1079 @@
+(* Note: Some of the code is translated from Wolfram free form input. Any Entity[] function would be free form in Wolfram.*)
+
+initColorFunc[func_] := (Clear[func]; func[_] = LightCyan;)
+setColorFunc[loc_, func_] := (initColorFunc[func]; func[loc] = Black;)
+
+makeButton[func_][loc_] := 
+ {EdgeForm[Black], GeoStyling[{Opacity[0.8], func[loc]}], 
+  Button[Polygon[loc], setColorFunc[loc, func]; dispdata = Column[{loc,
+      Manipulate[
+       f[LiveTo, AgeLived, dist[loc]], {LiveTo, 
+        Range[110]}, {AgeLived, Range[110]}, ControlType -> Slider], 
+      Row[Table[
+        DiscretePlot[f[dist[loc], x], {x, Range[110]}, PlotLabel -> f,
+          Filling -> Axis], {f, {SurvivalFunction, PDF}}], Spacer[10],
+        BaseStyle -> ImageSizeMultipliers -> 1]}];]}
+
+dist[t_Entity] := Lookup[stateDistribution, t]
+states = EntityList[\!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "States", Typeset`boxes$$ = 
+        TemplateBox[{"\"all US states with District of Columbia\"", 
+RowBox[{"EntityClass", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", "\"AllUSStatesPlusDC\""}], 
+            "]"}], 
+          "\"EntityClass[\\\"AdministrativeDivision\\\", \
+\\\"AllUSStatesPlusDC\\\"]\"", "\"administrative divisions\""}, 
+         "EntityClass"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "States", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USStateClass", 
+             "desc" -> "a class of US states", 
+             "input" -> "*C.States-_*USStateClass-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.States-_*Word-"}}}, {
+         "type" -> "SubCategory", "word" -> "States", 
+          "template" -> "Assuming ${desc1}. Use ${desc2} instead", 
+          "count" -> "2", 
+          "Values" -> {{
+            "name" -> "AllUSStatesPlusDC", 
+             "desc" -> "all US states with District of Columbia", 
+             "input" -> "*DPClash.USStateEC.States-_*\
+AllUSStatesPlusDC-"}, {
+            "name" -> "USStatesAllStates", "desc" -> "all US states", 
+             "input" -> "*DPClash.USStateEC.States-_*\
+USStatesAllStates-"}}}}, Typeset`assumptions$$ = {}, 
+        Typeset`open$$ = {1, 2}, Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.861887`6.386995323713508, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{518., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\)] // Flatten;
+distributions = CloudGet[
+CloudObject[
+   "https://www.wolframcloud.com/objects/6f6e1cd2-2152-4f73-9969-\
+e04f53a019f2"]];
+dataDistributions = {ctDist = distributions["Connecticut"],
+   alDist = distributions["Alabama"],
+   akDist = distributions["Arkansas"],
+   deDist = distributions["Delaware"],
+   flDist = distributions["Florida"],
+   gaDist = distributions["Georgia"],
+   kyDist = distributions["Kentucky"],
+   laDist = distributions["Louisiana"],
+   maDist = distributions["Massachusetts"],
+   miDist = distributions["Michigan"],
+   msDist = distributions["Mississippi"],
+   nhDist = distributions["New Hampshire"],
+   njDist = distributions["New Jersey"],
+   nyDist = distributions["New York"],
+   tnDist = distributions["Tennessee"],
+   vtDist = distributions["Vermont"],
+   riDist = distributions["Rhode Island"],
+   ncDist = distributions["North Carolina"],
+   scDist = distributions["South Carolina"],
+   inDist = distributions["Indiana"],
+   wvDist = distributions["West Virginia"],
+   vaDist = distributions["Virginia"],
+   paDist = distributions["Pennsylvania"],
+   wiDist = distributions["Wisconsin"],
+   ohDist = distributions["Ohio"]};
+stateDistribution = <|
+   Entity["AdministrativeDivision", {"Connecticut", 
+      "UnitedStates"}] -> ctDist, 
+   Entity["AdministrativeDivision", {"Alabama", "UnitedStates"}] -> 
+    alDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Arkansas", Typeset`boxes$$ = 
+        TemplateBox[{"\"Arkansas, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Arkansas\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Arkansas\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Arkansas", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Arkansas-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Arkansas-_*Word-"}, {
+            "name" -> "Language", "desc" -> "a language", 
+             "input" -> "*C.Arkansas-_*Language-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 1.0298`6.46429788098719, "Messages" -> {}}}, 
+        
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{395., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> akDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Delaware", Typeset`boxes$$ = 
+        TemplateBox[{"\"Delaware, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Delaware\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Delaware\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Delaware", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "4", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Delaware-_*USState-"}, {
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.Delaware-_*City-"}, {
+            "name" -> "Neighborhood", "desc" -> "a neighborhood", 
+             "input" -> "*C.Delaware-_*Neighborhood-"}, {
+            "name" -> "Language", "desc" -> "a language", 
+             "input" -> "*C.Delaware-_*Language-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.972074`6.439244320735386, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{393., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> deDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Florida", Typeset`boxes$$ = 
+        TemplateBox[{"\"Florida, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Florida\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", {\\\"Florida\\\", \
+\\\"UnitedStates\\\"}]\"", "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Florida", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "6", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Florida-_*USState-"}, {
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.Florida-_*GivenName-"}, {
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.Florida-_*City-"}, {
+            "name" -> "AdministrativeDivision", 
+             "desc" -> "an administrative division", 
+             "input" -> "*C.Florida-_*AdministrativeDivision-"}, {
+            "name" -> "Species", "desc" -> "a species specification", 
+             "input" -> "*C.Florida-_*Species-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Florida-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 1.236715`6.54381462183322, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{377., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> flDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "georgia", Typeset`boxes$$ = 
+        TemplateBox[{"\"Georgia, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Georgia\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", {\\\"Georgia\\\", \
+\\\"UnitedStates\\\"}]\"", "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "georgia", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "4", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.georgia-_*USState-"}, {
+            "name" -> "Country", "desc" -> "a country", 
+             "input" -> "*C.georgia-_*Country-"}, {
+            
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.georgia-_*GivenName-"}, {
+            "name" -> "Movie", "desc" -> "a movie", 
+             "input" -> "*C.georgia-_*Movie-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.776253`6.341548285110147, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{384., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> gaDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Indiana", Typeset`boxes$$ = 
+        TemplateBox[{"\"Indiana, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Indiana\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", {\\\"Indiana\\\", \
+\\\"UnitedStates\\\"}]\"", "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Indiana", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "6", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Indiana-_*USState-"}, {
+            "name" -> "NBATeam", "desc" -> "an NBA team", 
+             "input" -> "*C.Indiana-_*NBATeam-"}, {
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.Indiana-_*City-"}, {
+            
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.Indiana-_*GivenName-"}, {
+            "name" -> "AdministrativeDivision", 
+             "desc" -> "an administrative division", 
+             "input" -> "*C.Indiana-_*AdministrativeDivision-"}, {
+            "name" -> "TranslationData", 
+             "desc" -> " referring to translations", 
+             "input" -> "*C.Indiana-_*TranslationData-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.602178`6.231269878427064, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{380., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> inDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "kentucky", Typeset`boxes$$ = 
+        TemplateBox[{"\"Kentucky, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Kentucky\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Kentucky\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "kentucky", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.kentucky-_*USState-"}, {
+            
+            "name" -> "Movie", "desc" -> "a movie", 
+             "input" -> "*C.kentucky-_*Movie-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.kentucky-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.897304`6.404484597248353, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{395., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> kyDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Louisiana", Typeset`boxes$$ = 
+        TemplateBox[{"\"Louisiana, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Louisiana\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Louisiana\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Louisiana", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "5", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Louisiana-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Louisiana-_*Word-"}, {
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.Louisiana-_*GivenName-"}, {
+            
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.Louisiana-_*City-"}, {
+            "name" -> "Movie", "desc" -> "a movie", 
+             "input" -> "*C.Louisiana-_*Movie-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.887373`6.399651203847434, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{397., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> laDist, 
+   Entity["AdministrativeDivision", {"Massachusetts", 
+      "UnitedStates"}] -> maDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Michigan", Typeset`boxes$$ = 
+        TemplateBox[{"\"Michigan, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Michigan\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Michigan\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Michigan", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Michigan-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Michigan-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.766873`6.336268440931232, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{392., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> miDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Mississippi", Typeset`boxes$$ = 
+        TemplateBox[{"\"Mississippi, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Mississippi\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Mississippi\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Mississippi", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Mississippi-_*USState-"}, {
+            "name" -> "River", "desc" -> "a river", 
+             "input" -> "*C.Mississippi-_*River-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.776483`6.341676945399555, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{408., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> msDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "NewHampshire", Typeset`boxes$$ = 
+        TemplateBox[{"\"New Hampshire, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"NewHampshire\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}],
+           "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"NewHampshire\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "NewHampshire", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.NewHampshire-_*USState-"}, {
+            "name" -> "MusicWork", "desc" -> "a music work", 
+             "input" -> "*C.NewHampshire-_*MusicWork-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.81284`6.361550060669868, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{440., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> nhDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "NewJersey", Typeset`boxes$$ = 
+        TemplateBox[{"\"New Jersey, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"NewJersey\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"NewJersey\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "NewJersey", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.NewJersey-_*USState-"}, {
+            "name" -> "MusicAlbum", "desc" -> "a music album", 
+             "input" -> "*C.NewJersey-_*MusicAlbum-"}, {
+            "name" -> "VisualArts", "desc" -> "a photograph", 
+             "input" -> "*C.NewJersey-_*VisualArts-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.729662`6.314666722755302, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{410., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> njDist, 
+   Entity["AdministrativeDivision", {"NewYork", "UnitedStates"}] -> 
+    nyDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Tennessee", Typeset`boxes$$ = 
+        TemplateBox[{"\"Tennessee, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Tennessee\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Tennessee\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Tennessee", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Tennessee-_*USState-"}, {
+            "name" -> "NFLTeam", "desc" -> "an NFL team", 
+             "input" -> "*C.Tennessee-_*NFLTeam-"}, {
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.Tennessee-_*GivenName-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.999082`6.451146128054326, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{405., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> tnDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Vermont", Typeset`boxes$$ = 
+        TemplateBox[{"\"Vermont, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Vermont\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", {\\\"Vermont\\\", \
+\\\"UnitedStates\\\"}]\"", "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Vermont", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Vermont-_*USState-"}, {
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.Vermont-_*City-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Vermont-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.707695`6.301391120738817, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{388., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> vtDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Rhode Island", Typeset`boxes$$ = 
+        TemplateBox[{"\"Rhode Island, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"RhodeIsland\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"RhodeIsland\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Rhode Island", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Rhode+Island-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.Rhode+Island-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.693582`6.292642807199839, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{421., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> riDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "North Carolina", 
+        Typeset`boxes$$ = 
+        TemplateBox[{"\"North Carolina, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"NorthCarolina\"", ",", "\"UnitedStates\""}], "}"}]}], 
+            "]"}], "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"NorthCarolina\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "North Carolina", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.North+Carolina-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.North+Carolina-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 1.272292`6.556131789898975, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{431., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> ncDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "South Carolina", 
+        Typeset`boxes$$ = 
+        TemplateBox[{"\"South Carolina, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"SouthCarolina\"", ",", "\"UnitedStates\""}], "}"}]}], 
+            "]"}], "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"SouthCarolina\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "South Carolina", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.South+Carolina-_*USState-"}, {
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.South+Carolina-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.860821`6.386457846698483, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{433., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> scDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "West Virginia", Typeset`boxes$$ =
+         TemplateBox[{"\"West Virginia, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"WestVirginia\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}],
+           "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"WestVirginia\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "West Virginia", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "3", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.West+Virginia-_*USState-"}, {
+            "name" -> "VisualArts", "desc" -> "a photograph", 
+             "input" -> "*C.West+Virginia-_*VisualArts-"}, {
+            
+            "name" -> "Word", "desc" -> "a word", 
+             "input" -> "*C.West+Virginia-_*Word-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.745823`6.324180765681708, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{422., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> wvDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "virginia", Typeset`boxes$$ = 
+        TemplateBox[{"\"Virginia, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Virginia\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Virginia\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "virginia", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "7", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.virginia-_*USState-"}, {
+            "name" -> "GivenName", "desc" -> "a given name", 
+             "input" -> "*C.virginia-_*GivenName-"}, {
+            "name" -> "AdministrativeDivision", 
+             "desc" -> "an administrative division", 
+             "input" -> "*C.virginia-_*AdministrativeDivision-"}, {
+            
+            "name" -> "Movie", "desc" -> "a movie", 
+             "input" -> "*C.virginia-_*Movie-"}, {
+            "name" -> "SolarSystemFeature", 
+             "desc" -> "a solar system feature", 
+             "input" -> "*C.virginia-_*SolarSystemFeature-"}, {
+            "name" -> "City", "desc" -> "a city", 
+             "input" -> "*C.virginia-_*City-"}, {
+            "name" -> "Species", "desc" -> "a species specification", 
+             "input" -> "*C.virginia-_*Species-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.882745`6.397380259829032, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{382., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> vaDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Pennsylvania", Typeset`boxes$$ = 
+        TemplateBox[{"\"Pennsylvania, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Pennsylvania\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}],
+           "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Pennsylvania\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {}, Typeset`assumptions$$ = {}, 
+        Typeset`open$$ = {1, 2}, Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.661514`6.272084033339839, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{393., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> paDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Wisconsin", Typeset`boxes$$ = 
+        TemplateBox[{"\"Wisconsin, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Wisconsin\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          
+          "\"Entity[\\\"AdministrativeDivision\\\", \
+{\\\"Wisconsin\\\", \\\"UnitedStates\\\"}]\"", 
+          "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Wisconsin", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Wisconsin-_*USState-"}, {
+            "name" -> "River", "desc" -> "a river", 
+             "input" -> "*C.Wisconsin-_*River-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.509753`6.158904783864958, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{402., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> wiDist, \!\(\*
+NamespaceBox["LinguisticAssistant",
+DynamicModuleBox[{Typeset`query$$ = "Ohio", Typeset`boxes$$ = 
+        TemplateBox[{"\"Ohio, United States\"", 
+RowBox[{"Entity", "[", 
+RowBox[{"\"AdministrativeDivision\"", ",", 
+RowBox[{"{", 
+RowBox[{"\"Ohio\"", ",", "\"UnitedStates\""}], "}"}]}], "]"}], 
+          "\"Entity[\\\"AdministrativeDivision\\\", {\\\"Ohio\\\", \\\
+\"UnitedStates\\\"}]\"", "\"administrative division\""}, "Entity"], 
+        Typeset`allassumptions$$ = {{
+         "type" -> "Clash", "word" -> "Ohio", 
+          "template" -> "Assuming \"${word}\" is ${desc1}. Use as \
+${desc2} instead", "count" -> "2", 
+          
+          "Values" -> {{
+            "name" -> "USState", "desc" -> "a US state", 
+             "input" -> "*C.Ohio-_*USState-"}, {
+            "name" -> "Music", "desc" -> "a song", 
+             "input" -> "*C.Ohio-_*Music-"}}}}, 
+        Typeset`assumptions$$ = {}, Typeset`open$$ = {1, 2}, 
+        Typeset`querystate$$ = {
+        "Online" -> True, "Allowed" -> True, 
+         "mparse.jsp" -> 0.447264`6.102108936983763, 
+         "Messages" -> {}}}, 
+DynamicBox[ToBoxes[
+AlphaIntegration`LinguisticAssistantBoxes["", 4, Automatic, 
+Dynamic[Typeset`query$$], 
+Dynamic[Typeset`boxes$$], 
+Dynamic[Typeset`allassumptions$$], 
+Dynamic[Typeset`assumptions$$], 
+Dynamic[Typeset`open$$], 
+Dynamic[Typeset`querystate$$]], StandardForm],
+ImageSizeCache->{361., {9., 18.}},
+TrackedSymbols:>{
+          Typeset`query$$, Typeset`boxes$$, Typeset`allassumptions$$, 
+           Typeset`assumptions$$, Typeset`open$$, 
+           Typeset`querystate$$}],
+DynamicModuleValues:>{},
+UndoTrackedVariables:>{Typeset`open$$}],
+BaseStyle->{"Deploy"},
+DeleteWithContents->True,
+Editable->False,
+SelectWithContents->True]\) -> ohDist|>;
+f[liveto_Integer, lived_Integer, dist_DataDistribution] :=
+ 
+ Column@{"Current Age: " <> ToString@lived, 
+   "Live to: " <> ToString@liveto, 
+   "Expected Age:" <> 
+    ToString@
+     Floor[Expectation[x \[Conditioned] x > lived, 
+       x \[Distributed] dist]], 
+   "Probability of Survival: " <> 
+    ToString@
+     Probability[x > liveto \[Conditioned] x > lived, 
+      x \[Distributed] dist]}
+statespolygon = Keys[stateDistribution];
+dispdata = "";
