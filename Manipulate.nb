@@ -1,0 +1,8 @@
+Manipulate[DynamicModule[{colorfunc},
+  	Opacity[0.05, initColorFunc[colorfunc]];
+  	Dynamic[Column[{
+     GeoGraphics[makeButton[colorfunc] /@ Thread[statespolygon], 
+      GeoZoomLevel -> zoom],
+     dispdata
+     }, BaseStyle -> ImageSizeMultipliers -> 1]]
+  ], {zoom, 5, 1, 1}]
